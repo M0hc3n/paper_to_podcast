@@ -3,3 +3,5 @@ text_paper*
 podcast_*
 __pycache__/*
 __pycache__/
+/venv
+/kokoro

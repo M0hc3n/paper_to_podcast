@@ -1,8 +1,6 @@
 from langchain_core.messages import AIMessage
 from langchain_community.document_loaders import TextLoader
-from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from operator import itemgetter
@@ -10,16 +8,21 @@ from PyPDF2 import PdfReader
 from templates import discuss_prompt_template
 from datetime import datetime
 import re
+# instead of OpenAIEmbeddings   
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 
 def initialize_discussion_chain(txt_file, llm):
     # Load, chunk and index the contents of the blog.
-    loader = TextLoader(txt_file, encoding='UTF-8')
+    loader = TextLoader(txt_file, encoding="UTF-8")
     docs = loader.load()
 
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     splits = text_splitter.split_documents(docs)
-    vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
+    vectorstore = Chroma.from_documents(
+        documents=splits,
+        embedding=GoogleGenerativeAIEmbeddings(model="models/text-embedding-004"),
+    )
 
     # Retrieve and generate using the relevant snippets of the blog.
     retriever = vectorstore.as_retriever()
@@ -102,11 +105,13 @@ def generate_script(pdf_path: str, chains: dict, llm) -> str:
     txt_file = parse_pdf(pdf_path, txt_file)
     with open(txt_file, "r", encoding="utf-8") as file:
         paper = file.read()
+
     plan = chains["plan_script_chain"].invoke({"paper": paper})
     print("plan generated")
 
     # step 3: generate the actual script for the podcast by looping over the sections of the plan
     script = ""
+
     # generate the initial dialogue
     initial_dialogue = chains["initial_dialogue_chain"].invoke(
         {"paper_head": get_head(pdf_path)}
