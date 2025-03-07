@@ -7,21 +7,44 @@ from utils.script import generate_script, parse_script_plan
 from utils.free_audio_gen import generate_podcast
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+from openai import OpenAI
+
 
 # Load environment variables from a .env file
 load_dotenv()
 
 # Retrieve the OpenAI API key from the environment variables
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+API_KEY = os.getenv("API_KEY")
 
 # Check if the keys were retrieved successfully
-if GOOGLE_API_KEY:
+if API_KEY:
     print("API Key retrieved successfully")
 else:
     print("API Key not found")
 
-# Initialize the ChatGoogleGenerativeAI model
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
+BASE_URL = os.getenv("BASE_URL")
+
+# Check if the keys were retrieved successfully
+if BASE_URL:
+    print("API Key retrieved successfully")
+else:
+    print("API Key not found")
+
+MODEL_NAME = os.getenv("MODEL_NAME")
+
+# Check if the keys were retrieved successfully
+if MODEL_NAME:
+    print("API Key retrieved successfully")
+else:
+    print("API Key not found")
+
+client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
+
+llm = client.chat.completions.create(
+    model=MODEL_NAME,
+    messages=[{"role": "system", "content": "You are a helpful assistant."}],
+)
+
 
 # chains
 chains = {
@@ -29,6 +52,7 @@ chains = {
     "initial_dialogue_chain": initial_dialogue_prompt | llm | StrOutputParser(),
     "enhance_chain": enhance_prompt | llm | StrOutputParser(),
 }
+
 
 def main(pdf_path):
     # Step 1: Generate the podcast script from the PDF
@@ -38,7 +62,7 @@ def main(pdf_path):
 
     print("Generating podcast audio files...")
     # # Step 2: Generate the podcast audio files and merge them
-    generate_podcast(script)
+    # generate_podcast(script)
     print("Podcast generation complete!")
 
 
