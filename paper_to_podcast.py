@@ -1,14 +1,8 @@
 import argparse
 import os
-from templates import enhance_prompt, initial_dialogue_prompt, plan_prompt
 from dotenv import load_dotenv
-from langchain_core.output_parsers import StrOutputParser
-from utils.script import generate_script, parse_script_plan
-from utils.free_audio_gen import generate_podcast
-from langchain_google_genai import ChatGoogleGenerativeAI
 
-from openai import OpenAI
-
+from utils.updated.script_generator import ScriptGenerator
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -26,40 +20,35 @@ BASE_URL = os.getenv("BASE_URL")
 
 # Check if the keys were retrieved successfully
 if BASE_URL:
-    print("API Key retrieved successfully")
+    print("BASE_URL retrieved successfully")
 else:
-    print("API Key not found")
+    print("BASE_URL not found")
 
 MODEL_NAME = os.getenv("MODEL_NAME")
 
 # Check if the keys were retrieved successfully
 if MODEL_NAME:
-    print("API Key retrieved successfully")
+    print("MODEL_NAME retrieved successfully")
 else:
-    print("API Key not found")
+    print("MODEL_NAME not found")
 
-client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
+print(MODEL_NAME)
 
-llm = client.chat.completions.create(
-    model=MODEL_NAME,
-    messages=[{"role": "system", "content": "You are a helpful assistant."}],
+script_generator = ScriptGenerator(
+    api_key=API_KEY,
+    base_url=BASE_URL,
+    model="gemini-2.0-flash",
 )
-
-
-# chains
-chains = {
-    "plan_script_chain": plan_prompt | llm | parse_script_plan,
-    "initial_dialogue_chain": initial_dialogue_prompt | llm | StrOutputParser(),
-    "enhance_chain": enhance_prompt | llm | StrOutputParser(),
-}
 
 
 def main(pdf_path):
     # Step 1: Generate the podcast script from the PDF
     print("Generating podcast script...")
-    script = generate_script(pdf_path, chains, llm)
+    # script = generate_script(pdf_path, chains, llm)
+    script = script_generator.generate_script(pdf_path)
     print("Podcast script generation complete!")
 
+    print(script)
     print("Generating podcast audio files...")
     # # Step 2: Generate the podcast audio files and merge them
     # generate_podcast(script)
