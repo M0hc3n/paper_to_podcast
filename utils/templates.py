@@ -1,6 +1,3 @@
-# utils/templates.py
-
-
 class PodcastScriptTemplates:
     """
     Collection of prompt templates for podcast script generation
@@ -35,7 +32,7 @@ Example of a structure for the podcast:
 The paper: {paper}
 The podcast plan in titles and bullet points:"""
 
-    INITIAL_DIALOGUE_PROMPT = """You are a very clever scriptwriter of podcast introductions. You will be given the title of a paper and a brief glimpse of the content of a research paper. Avoid using sound effects, only text. Avoid finishing with the host, finish the dialogue with the expert. Your task will be to generate an engaging and enthusiastic introduction for the podcast. The introduction should be captivating, interactive, and should make the listeners eager to hear the discussion. The introduction of the podcast should have 3 interactions only. The podcast involves the following persons:
+    INITIAL_DIALOGUE_PROMPT = """You are a very clever scriptwriter of podcast introductions. You will be given the title of a paper and a brief glimpse of the content of a research paper. Avoid using sound effects, and using '**' to indicate boldness, only text. Avoid finishing with the host, finish the dialogue with the expert. Your task will be to generate an engaging and enthusiastic introduction for the podcast. The introduction should be captivating, interactive, and should make the listeners eager to hear the discussion. The introduction of the podcast should have 3 interactions only. The podcast involves the following persons:
 - The host: he will present the paper and its details in a very engaging way. very professional, friendly, warm and enthusiastic.
 - The learner: he will ask clever and significative questions about the paper and its content. he is curious and funny.
 - The expert: he will provide deep insights, comments and details about the content of the paper and other related topics. he talks less than the two other and his interventions are more profound and detailed.
@@ -50,7 +47,7 @@ Learner: I have a question about ...
 Content of the paper: {paper_head}
 Brief 3 interactions introduction:"""
 
-    DISCUSS_PROMPT = """You are a very clever scriptwriter of podcast discussions. You will be given a plan for a section of the middle of a podcast that already started involving 3 persons discussing about the content of a research paper. Your task will be to generate a brief dialogue for the podcast talking about the given section, do not include voice effects, and do not make an introduction. The dialogue should be engaging, interactive, enthusiastic and have very clever transitions and twists. The dialogue should follow the structure of the plan. The podcast involves the following persons:
+    DISCUSS_PROMPT = """You are a very clever scriptwriter of podcast discussions. You will be given a plan for a section of the middle of a podcast that already started involving 3 persons discussing about the content of a research paper. Your task will be to generate a brief dialogue for the podcast talking about the given section, do not include voice effects, and do not make an introduction. The dialogue should be engaging, interactive, enthusiastic and have very clever transitions and twists. Avoid using '**' to indicate boldness. The dialogue should follow the structure of the plan. The podcast involves the following persons:
 - The host: he will present the paper and its details in a very engaging way. very professional, friendly, warm and enthusiastic.
 - The learner: he will ask clever and significative questions about the paper and its content. he is curious and funny.
 - The expert: he will provide deep insights, comments and details about the content of the paper and other related topics. he talks less than the two other and his interventions are more profound and detailed.
@@ -72,7 +69,7 @@ Previous dialogue (to avoid repetitions): {previous_dialogue}
 Additional context:{additional_context}
 Brief section dialogue:"""
 
-    ENHANCE_PROMPT = """You are a very clever scriptwriter of podcast discussions. You will be given a script for a podcast involving 3 persons discussing about the content of a research paper. Your task will be to enhance the script by removing audio effects mentions and reducing repetition and redundancy. Don't mention sound effects, laughing, chuckling or any other audio effects between brackets. The script should only contain what the persons are saying and not what are they doing or how they are saying it. Enhance the transitions and the twists, and reduce repetition and redundancy.
+    ENHANCE_PROMPT = """You are a very clever scriptwriter of podcast discussions. You will be given a script for a podcast involving 3 persons discussing about the content of a research paper. Your task will be to enhance the script by removing audio effects mentions and reducing repetition and redundancy. Don't mention sound effects, laughing, chuckling or any other audio effects between brackets. The script should only contain what the persons are saying and not what are they doing or how they are saying it. Remove any use of '**' to indicated boldness. Enhance the transitions and the twists, and reduce repetition and redundancy.
 The draft script: {draft_script}
 The enhanced script:"""
 
